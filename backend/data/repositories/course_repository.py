@@ -20,6 +20,10 @@ class CourseRepository:
     def existed_course(self,course:str) -> bool:
         return self.collection.find_one({'course':course}) is not None
 
+
+    def existed_course(self,course_id:int) -> bool:
+        return self.collection.find_one({'course_id':course_id}) is not None
+
     def create_course(self, course:str) -> None:
         course = course.strip().lower()
 
@@ -35,11 +39,11 @@ class CourseRepository:
         except Exception:
             raise CreationError("Failed to create course")
 
-    def get_course_by_id(self, course_id):
+    def get_course_by_id(self, course_id) -> str:
         course = self.collection.find_one({'_id': ObjectId(course_id)})
         if not course:
-            raise CourseNotFound("Course not found")
-        return course
+            raise CourseNotFound("Course id not found")
+        return course["course_name"]
 
 
     def available_courses(self) -> list:
@@ -51,6 +55,28 @@ class CourseRepository:
             }
             for course in courses
         ]
+
+
+    def get_id_by_course_name(self,course_name):
+        course = self.collection.find_one({'course_name':course_name})
+        if not course:
+            raise CourseNotFound("course not found")
+        return str(course["_id"])
+
+
+    def remove_course(self,course_name:str):
+        if self.existed_course(course_name):
+            self.collection.delete_one({'course_name':course_name})
+        else:
+            raise CourseNotFound("Course not found")
+
+    def remove_course(self,course_id:int) -> None:
+        if self.existed_course(course_id):
+            self.collection.delete_one({'course_id':course_id})
+        else:
+            raise CourseNotFound("Invalid course id")
+
+
 
 
 

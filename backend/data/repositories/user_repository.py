@@ -1,6 +1,7 @@
 import os
 
 from bson import ObjectId
+from flask.cli import load_dotenv
 from pymongo import MongoClient
 
 
@@ -11,6 +12,8 @@ from backend.excpetions.invalid_credentials import IncorrectLoginCredentialsExce
 from backend.excpetions.password_error import PasswordError
 from backend.excpetions.patient_error import PatientNotFoundException
 
+
+load_dotenv()
 
 class UserRepository:
     def __init__(self):

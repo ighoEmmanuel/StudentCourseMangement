@@ -1,12 +1,17 @@
-import time
-from dataclasses import dataclass
-from random import random
+import dataclasses
+from dataclasses import dataclass, field
+from datetime import datetime
+from random import randint
 
 from backend.data.models.user import User
 from backend.data.models.course import Course
 
+def generate_prof_id():
+    timestamp = int(datetime.now().timestamp() * 10)
+    return f"PROF_{timestamp}{randint(100, 999)}"
 
 @dataclass
 class Professor(User):
-    __id = f"Pro_{int(time.time() * 1000)}{random.randint(1000,4000)}"
-    __course: Course
+    course: Course = dataclasses.field(init=False)
+    id:str = field(default_factory=generate_prof_id)
+
